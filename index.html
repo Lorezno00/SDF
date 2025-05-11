@@ -48,10 +48,10 @@
     #SDF {
       width: 100%;
       font-size: 4vw;
-      padding-top: 100px;
-      padding-left: 60px;
+      padding-top: 5vw;
+      padding-right: 120px;
       padding-bottom: 0px;
-      text-align: left;
+      text-align: right;
       box-sizing: border-box;
       font-family: 'Forma';
       position: fixed; /* Rende il testo fisso */
@@ -66,7 +66,8 @@
       width: 75vw;
       transform: translateX(-12vw);
       font-size: 2vw;
-      padding-left: 60px;
+      padding-left: 5vw;
+      padding-top: 5vw;
       padding-bottom: 2vw;
       text-align: left;
       box-sizing: border-box;
@@ -115,92 +116,74 @@
     .demo-container {
       display: flex;
       flex-direction: row;
+      transform:translateX(-20vw);
       align-items: flex-start;
       justify-content: center;
       margin-top: 40px;
       margin-bottom: 200px;
     }
 
-    .buttons-container-vertical {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+.buttons-container-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+}
 
-    /* Slider Style */
-    .slider-container {
-      margin-top: 20px;
-      text-align: center;
-      color: white;
-    }
-
-    .slider {
-      width: 80%;
-      margin: 10px 0;
-    }
-
-  .slider-container {
-    margin-top: 20px;
+.slider-container {
     text-align: center;
     color: white;
-  }
+    transform: rotate(-90deg) translateY(1px); /* Ruota lo slider di 90 gradi e lo sposta a destra */
+    margin-top: 80px;
+}
 
-  /* Cambia lo stile di base dello slider */
-  .slider {
-    width: 80%;
-    height: 15px; /* Altezza della barra */
+.slider {
+    width: 150px;  /* Imposta una larghezza per lo slider verticale */
+    height: 15px;  /* Spessore della linea dello slider */
     -webkit-appearance: none;
     appearance: none;
-    background: #ddd; /* Colore di sfondo della barra */
-    border-radius: 10px;
+    background: white; /* Colore della linea */
+    border-radius: 7.5px; /* Arrotonda i bordi della linea */
     outline: none;
-    transition: background 0.3s;
-  }
+}
 
-  /* Cambia lo stile quando l'utente interagisce con lo slider */
-  .slider:hover {
-    background: #bbb;
-  }
-
-  /* Personalizza il cursore dello slider */
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #ff9800; /* Colore del cursore */
+.slider::-webkit-slider-thumb {
+    width: 40px; /* Dimensione della palla */
+    height: 40px;
+    border-radius: 50%; /* Rende la palla circolare */
+    background: white; /* Colore iniziale della palla */
     cursor: pointer;
     transition: background 0.3s;
-  }
+}
 
-  .slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
+.slider::-webkit-slider-thumb:hover {
+    background: yellow; /* Colore della palla quando selezionata */
+}
+
+.slider::-webkit-slider-runnable-track {
+    width: 15px; /* Spessore della traccia */
+    background: white; /* Colore della traccia */
+}
+
+.slider::-moz-range-thumb {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: #8e8e8e;
+    background: white;
     cursor: pointer;
     transition: background 0.3s;
-  }
+}
 
-  /* Cambia il colore del cursore quando è selezionato */
-  .slider::-webkit-slider-thumb:hover {
-    background: #e8e8e8;
-  }
+.slider::-moz-range-thumb:hover {
+    background: yellow;
+}
 
-  /* Cambia lo stile della traccia (parte della barra non coperta dal cursore) */
-  .slider::-webkit-slider-runnable-track {
-    height: 15px;
-    border-radius: 10px;
-    background: #333; /* Colore della traccia */
-  }
+.slider::-moz-range-track {
+    width: 15px;
+    background: white;
+}
 
-  .slider::-moz-range-track {
-    height: 15px;
-    border-radius: 10px;
-    background: #333;
-  }
 </style>
 
   </style>
@@ -214,26 +197,24 @@
     Gli SDF sono utilizzati in molti campi, tra cui la computer grafica, la modellazione 3D e la simulazione fisica, per rappresentare oggetti complessi in modo efficiente e per applicare tecniche come il ray tracing e il rendering volumetrico. Questo approccio offre anche vantaggi nelle operazioni booleane tra oggetti 3D, come unione, differenza e intersezione, grazie alla semplicità matematica delle funzioni di distanza.
   </div>
 
-  <div class="demo-container">
+<div class="demo-container">
     <div class="buttons-container-vertical">
-      <div class="circle-btn active" onclick="changeDemo(1)" id="btn1"></div>
-      <div class="circle-btn" onclick="changeDemo(2)" id="btn2"></div>
-      <div class="circle-btn" onclick="changeDemo(3)" id="btn3"></div>
+        <div class="circle-btn active" onclick="changeDemo(1)" id="btn1"></div>
+        <div class="circle-btn" onclick="changeDemo(2)" id="btn2"></div>
+        <div class="circle-btn" onclick="changeDemo(3)" id="btn3"></div>
+        <!-- Slider moved here -->
+        <div class="slider-container">
+            <input type="range" id="pixel-slider" class="slider" min="10" max="30" value="20" step="1">
+            <span id="slider-value" style="color: black;"></span>
+        </div>
     </div>
     <div id="canvas-holder"></div>
-  </div>
-
-  <!-- Slider for pixel size -->
-  <div class="slider-container">
-    <label for="pixel-slider">Adjust Pixel Size: </label>
-    <input type="range" id="pixel-slider" class="slider" min="20" max="70" value="20" step="1">
-    <span id="slider-value">20</span>
-  </div>
+</div>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
   <script>
     let demo = 1;
-    let pixelSize = 20;  // Default pixel size
+    let pixelSize = 10;  // Default pixel size
 
     function setup() {
       const canvas = createCanvas(windowWidth / 2.8, windowWidth / 2.8);
