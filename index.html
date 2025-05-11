@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDF</title>
+  <style>
+    /* Stili CSS esistenti */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @font-face {
+      font-family: 'PPEditorialOld';
+      src: url('fonts/PPEditorialOld-Regular.woff2') format('woff2'),
+           url('fonts/PPEditorialOld-Regular.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Forma';
+      src: url('fonts/FormaDJRDeck-Regular-Testing.otf') format('woff2'),
+           url('fonts/FormaDJRDeck-Regular-Testing.otf') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      margin: 0;
+      background-color: black;
+      color: white;
+      font-family: 'PPEditorialOld', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow: auto;
+    }
+
+    #SDF {
+      width: 100%;
+      font-size: 4vw;
+      padding-top: 100px;
+      padding-left: 60px;
+      padding-bottom: 0px;
+      text-align: left;
+      box-sizing: border-box;
+      font-family: 'Forma';
+      position: fixed; /* Rende il testo fisso */
+      top: 0;          /* Posiziona il testo in alto */
+      left: 0;         /* Allinea il testo a sinistra */
+      z-index: 1000;   /* Assicura che il testo rimanga sopra altri elementi */
+    }
+
+    /* Altri stili CSS */
+    #testobox {
+      margin-top: 0.5vw;
+      width: 75vw;
+      transform: translateX(-12vw);
+      font-size: 2vw;
+      padding-left: 60px;
+      padding-bottom: 2vw;
+      text-align: left;
+      box-sizing: border-box;
+      font-family: 'Forma', sans-serif;
+    }
+
+    #testobox2 {
+      margin-top: 0.5vw;
+      width: 75vw;
+      transform: translateX(-12vw);
+      font-size: 2vw;
+      padding-left: 60px;
+      padding-bottom: 2vw;
+      text-align: left;
+      box-sizing: border-box;
+      font-family: 'Forma', sans-serif;
+    }
+
+    #canvas-holder {
+      margin-top: 20px;
+    }
+
+    .buttons-container-vertical {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+    }
+
+    .circle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: white;
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid white;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .circle-btn.active {
+      background-color: yellow;
+      border-color: yellow;
+    }
+
+    .demo-container {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      margin-top: 40px;
+      margin-bottom: 200px;
+    }
+
+    .buttons-container-vertical {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Slider Style */
+    .slider-container {
+      margin-top: 20px;
+      text-align: center;
+      color: white;
+    }
+
+    .slider {
+      width: 80%;
+      margin: 10px 0;
+    }
+
+  .slider-container {
+    margin-top: 20px;
+    text-align: center;
+    color: white;
+  }
+
+  /* Cambia lo stile di base dello slider */
+  .slider {
+    width: 80%;
+    height: 15px; /* Altezza della barra */
+    -webkit-appearance: none;
+    appearance: none;
+    background: #ddd; /* Colore di sfondo della barra */
+    border-radius: 10px;
+    outline: none;
+    transition: background 0.3s;
+  }
+
+  /* Cambia lo stile quando l'utente interagisce con lo slider */
+  .slider:hover {
+    background: #bbb;
+  }
+
+  /* Personalizza il cursore dello slider */
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #ff9800; /* Colore del cursore */
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #8e8e8e;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  /* Cambia il colore del cursore quando è selezionato */
+  .slider::-webkit-slider-thumb:hover {
+    background: #e8e8e8;
+  }
+
+  /* Cambia lo stile della traccia (parte della barra non coperta dal cursore) */
+  .slider::-webkit-slider-runnable-track {
+    height: 15px;
+    border-radius: 10px;
+    background: #333; /* Colore della traccia */
+  }
+
+  .slider::-moz-range-track {
+    height: 15px;
+    border-radius: 10px;
+    background: #333;
+  }
+</style>
+
+  </style>
+</head>
+
+<body>
+  <div id="SDF">SDF</div>
+  <div id="testobox">
+    Le Signed Distance Function (SDF) sono una rappresentazione matematica di superfici nello spazio tridimensionale, dove ogni punto dello spazio è associato alla distanza più breve dalla superficie. Se il punto si trova all'interno della superficie, la distanza è negativa, mentre se si trova all'esterno, la distanza è positiva. La funzione restituisce quindi il valore della distanza e, allo stesso tempo, indica da quale lato della superficie si trova il punto.
+    <br><br>
+    Gli SDF sono utilizzati in molti campi, tra cui la computer grafica, la modellazione 3D e la simulazione fisica, per rappresentare oggetti complessi in modo efficiente e per applicare tecniche come il ray tracing e il rendering volumetrico. Questo approccio offre anche vantaggi nelle operazioni booleane tra oggetti 3D, come unione, differenza e intersezione, grazie alla semplicità matematica delle funzioni di distanza.
+  </div>
+
+  <div class="demo-container">
+    <div class="buttons-container-vertical">
+      <div class="circle-btn active" onclick="changeDemo(1)" id="btn1"></div>
+      <div class="circle-btn" onclick="changeDemo(2)" id="btn2"></div>
+      <div class="circle-btn" onclick="changeDemo(3)" id="btn3"></div>
+    </div>
+    <div id="canvas-holder"></div>
+  </div>
+
+  <!-- Slider for pixel size -->
+  <div class="slider-container">
+    <label for="pixel-slider">Adjust Pixel Size: </label>
+    <input type="range" id="pixel-slider" class="slider" min="20" max="70" value="20" step="1">
+    <span id="slider-value">20</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
+  <script>
+    let demo = 1;
+    let pixelSize = 20;  // Default pixel size
+
+    function setup() {
+      const canvas = createCanvas(windowWidth / 2.8, windowWidth / 2.8);
+      canvas.parent('canvas-holder');
+      strokeWeight(7);
+      noLoop();
+
+      // Update pixel size from the slider
+      const slider = document.getElementById('pixel-slider');
+      slider.addEventListener('input', function() {
+        pixelSize = parseInt(slider.value);
+        document.getElementById('slider-value').textContent = pixelSize;
+        redraw();
+      });
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth / 2.8, windowWidth / 2.8);
+    }
+
+    function draw() {
+      if (demo === 1) {
+        demo1();
+      } else if (demo === 2) {
+        demo2();
+      } else if (demo === 3) {
+        demo3();
+      }
+    }
+
+    function demo1() {
+      background(220);
+      const dim = width / pixelSize;
+      const soglia = pixelSize * 0.53 / width * 2;
+
+      for (let j = 0; j < dim; j++) {
+        for (let i = 0; i < dim; i++) {
+          const u = i / (dim - 1) * 2 - 1;
+          const v = j / (dim - 1) * 2 - 1;
+
+          const c1 = cerchio(u, v, 0.8);
+          const bordoc1 = Math.abs(c1) < soglia;
+
+          fill(bordoc1 ? 0 : 255);
+          rect(pixelSize * i, pixelSize * j, pixelSize, pixelSize);
+        }
+      }
+    }
+
+    function demo2() {
+      background(220);
+      const dim = width / pixelSize;
+      const soglia = pixelSize * 0.53 / width * 2;
+
+      for (let j = 0; j < dim; j++) {
+        for (let i = 0; i < dim; i++) {
+          const u = i / (dim - 1) * 2 - 1;
+          const v = j / (dim - 1) * 2 - 1;
+
+          const r1 = sdEquilateralTriangle({ x: u, y: -v + 0.25 }, 0.8);
+          const bordor1 = Math.abs(r1) < soglia;
+
+          fill(bordor1 ? 0 : 255);
+          rect(pixelSize * i, pixelSize * j, pixelSize, pixelSize);
+        }
+      }
+    }
+
+    function demo3() {
+      background(220);
+      const dim = width / pixelSize;
+      const soglia = pixelSize * 0.53 / width * 2;
+
+      for (let j = 0; j < dim; j++) {
+        for (let i = 0; i < dim; i++) {
+          const u = i / (dim - 1) * 2 - 1;
+          const v = j / (dim - 1) * 2 - 1;
+
+          const r1 = rettangolo(u, v, 0.4, 0.7);
+          const bordor1 = Math.abs(r1) < soglia;
+
+          fill(bordor1 ? 0 : 255);
+          rect(pixelSize * i, pixelSize * j, pixelSize, pixelSize);
+        }
+      }
+    }
+
+    function cerchio(x, y, r) {
+      return Math.sqrt(x ** 2 + y ** 2) - r;
+    }
+
+    function rettangolo(px, py, halfWidth, halfHeight) {
+      const dx = Math.abs(px) - halfWidth;
+      const dy = Math.abs(py) - halfHeight;
+      if (dx <= 0 && dy <= 0) return Math.min(-dx, -dy);
+      const ox = Math.max(dx, 0);
+      const oy = Math.max(dy, 0);
+      return Math.sqrt(ox * ox + oy * oy);
+    }
+
+    function sdEquilateralTriangle(p, r) {
+      const k = Math.sqrt(3);
+      p.x = Math.abs(p.x) - r;
+      p.y = p.y + r / k;
+      if (p.x + k * p.y > 0) {
+        const x = (p.x - k * p.y) / 2;
+        const y = (-k * p.x - p.y) / 2;
+        p.x = x;
+        p.y = y;
+      }
+      p.x -= clamp(p.x, -2 * r, 0);
+      return -Math.hypot(p.x, p.y) * Math.sign(p.y);
+    }
+
+    function clamp(val, min, max) {
+      return Math.max(min, Math.min(max, val));
+    }
+
+    function changeDemo(num) {
+      demo = num;
+      redraw();
+
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById('btn' + i).classList.remove('active');
+      }
+      document.getElementById('btn' + num).classList.add('active');
+    }
+
+  </script>
+
+</body>
+</html>
