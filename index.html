@@ -1,22 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SDF</title>
+  <title>SDF Demo Responsiva</title>
   <style>
-    /* Stili CSS esistenti */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 1s ease-out, transform 1s ease-out;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
     @font-face {
       font-family: 'PPEditorialOld';
       src: url('fonts/PPEditorialOld-Regular.woff2') format('woff2'),
@@ -27,8 +15,7 @@
 
     @font-face {
       font-family: 'Forma';
-      src: url('fonts/FormaDJRDeck-Regular-Testing.otf') format('woff2'),
-           url('fonts/FormaDJRDeck-Regular-Testing.otf') format('woff');
+      src: url('fonts/FormaDJRDeck-Regular-Testing.otf') format('opentype');
       font-weight: normal;
       font-style: normal;
     }
@@ -42,308 +29,668 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      overflow: auto;
+      overflow-x: hidden;
+      padding-bottom: clamp(80px, 15vw, 120px); /* Spazio per il footer */
+    }
+
+    /* Animazione Fade In dall'Alto */
+    @keyframes fadeInFromTop {
+      from {
+        opacity: 0;
+        transform: translateY(-30px); /* Inizia 30px sopra la posizione finale */
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-from-top {
+      opacity: 0; /* Inizia trasparente */
+      animation: fadeInFromTop 0.8s ease-out forwards; /* Applica l'animazione */
     }
 
     #SDF {
       width: 100%;
-      font-size: 4vw;
-      padding-top: 5vw;
-      padding-right: 120px;
-      padding-bottom: 0px;
+      font-size: clamp(22px, 4vw, 44px);
+      padding-top: clamp(10px, 2.5vw, 25px);
+      padding-right: clamp(20px, 8vw, 100px);
       text-align: right;
       box-sizing: border-box;
-      font-family: 'Forma';
-      position: fixed; /* Rende il testo fisso */
-      top: 0;          /* Posiziona il testo in alto */
-      left: 0;         /* Allinea il testo a sinistra */
-      z-index: 1000;   /* Assicura che il testo rimanga sopra altri elementi */
+      font-family: 'Forma', sans-serif;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10000;
+      /* animation-delay: 0s; /* Nessun ritardo per l'header */
     }
 
-    /* Altri stili CSS */
-    #testobox {
-      margin-top: 0.5vw;
+    #testobox { /* Box di testo originale */
+      padding-top: clamp(10px, 2.5vw, 25px); /* Margine superiore specifico per l'header fisso */
       width: 75vw;
-      transform: translateX(-12vw);
-      font-size: 2vw;
-      padding-left: 5vw;
-      padding-top: 5vw;
-      padding-bottom: 2vw;
+      margin-left: 5vw;
+      margin-right: auto;
+      font-size: clamp(18px, 2.5vw, 24px);
+      padding: clamp(20px, 3vw, 35px);
       text-align: left;
       box-sizing: border-box;
       font-family: 'Forma', sans-serif;
+      position: relative;
+      z-index: 100;
+      /* animation-delay: 0.2s; /* Ritardo per il primo box di testo */
     }
 
-    #testobox2 {
-      margin-top: 0.5vw;
-      width: 75vw;
-      transform: translateX(-12vw);
-      font-size: 2vw;
-      padding-left: 60px;
-      padding-bottom: 2vw;
-      text-align: left;
-      box-sizing: border-box;
-      font-family: 'Forma', sans-serif;
+    /* Stile per i NUOVI box di testo aggiuntivi */
+    .additional-text-box {
+      width: 75vw; /* Come #testobox */
+      margin-left: 5vw; /* Come #testobox, per allineamento a sinistra */
+      margin-right: auto; /* Come #testobox */
+      font-size: clamp(18px, 2.5vw, 24px); /* Come #testobox */
+      padding: clamp(20px, 3vw, 35px); /* Come #testobox */
+      text-align: left; /* Come #testobox */
+      box-sizing: border-box; /* Come #testobox */
+      font-family: 'Forma', sans-serif; /* Come #testobox */
+      position: relative; /* Come #testobox */
+      z-index: 100; /* Come #testobox */
+      margin-top: 60px; /* Margine superiore standard per questi box */
+      margin-bottom: 60px; /* Margine inferiore standard per questi box */
+      /* background-color: #1a1a1a; /* Opzionale: per distinguerli visivamente se necessario */
+      /* animation-delay: viene gestito specificamente per ogni box */
     }
 
-    #canvas-holder {
-      margin-top: 20px;
-    }
 
-    .buttons-container-vertical {
+    .demo-container { /* Primo demo container */
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 20px;
+      width: 95%;
+      max-width: 900px;
+      margin: 30px auto 50px auto;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 100;
+      /* animation-delay: 0.4s; */
     }
 
-    .circle-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: white;
-      margin: 10px;
+    #canvas-holder {
+      width: 100%; max-width: 720px; display: flex;
+      justify-content: center; align-items: center; margin-top: 20px;
+    }
+    .buttons-container-vertical {
+      display: flex; flex-direction: row; flex-wrap: wrap; align-items: center;
+      justify-content: center; margin-right: 0; margin-bottom: 20px; width: 100%;
+    }
+    .shape-btn {
+      width: clamp(35px, 8vw, 40px); height: clamp(35px, 8vw, 40px); background-color: white;
+      margin: 8px; cursor: pointer; border: 2px solid white;
+      transition: background-color 0.3s, border-color 0.3s; box-sizing: border-box;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .shape-btn.active { background-color: yellow; border-color: yellow; }
+    .circle-shape { border-radius: 50%; }
+    .triangle-shape { clip-path: polygon(50% 10%, 5% 90%, 95% 90%); border-radius: 0; }
+    .square-shape { border-radius: 0; }
+    .slider-container {
+      text-align: center; color: white; transform: rotate(0deg); margin-top: 15px;
+      margin-bottom: 10px; margin-left: 50px; width: clamp(90px, 30vw, 110px);
+      display: flex; flex-direction: row; align-items: center; justify-content: center;
+    }
+    /* ======== INIZIO NUOVI STILI SLIDER DEMO 1 (Verticale in Desktop) ======== */
+    #slider-value {
+      display: none;
+    }
+    .slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
       cursor: pointer;
-      border: 2px solid white;
-      transition: background-color 0.3s, border-color 0.3s;
+      margin: 0;
+    }
+    .slider::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      background: white;
+      border-radius: 2px;
+    }
+    .slider::-moz-range-track {
+      width: 100%;
+      height: 4px;
+      background: white;
+      border-radius: 2px;
+    }
+    .slider::-ms-track {
+      width: 100%;
+      height: 4px;
+      cursor: pointer;
+      background: transparent;
+      border-color: transparent;
+      color: transparent;
+    }
+    .slider::-ms-fill-lower {
+      background: white;
+      border-radius: 2px;
+    }
+    .slider::-ms-fill-upper {
+      background: white;
+      border-radius: 2px;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      border: 1px solid #ffffff;
+      cursor: pointer;
+      margin-top: -7px;
+      transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
+    }
+    .slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      border: 1px solid #ffffff;
+      cursor: pointer;
+      transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
+    }
+    .slider::-ms-thumb {
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      border: 1px solid #b0b0b0;
+      cursor: pointer;
+      margin-top: 0px;
+      transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
+    }
+    .slider:active::-webkit-slider-thumb {
+      background: yellow;
+      border-color: #dbc400;
+    }
+    .slider:active::-moz-range-thumb {
+      background: yellow;
+      border-color: #dbc400;
+    }
+    .slider:active::-ms-thumb {
+      background: yellow;
+      border-color: #dbc400;
+    }
+    /* ======== FINE NUOVI STILI SLIDER DEMO 1 ======== */
+    #footer {
+      position: fixed; bottom: 0; left: 0; width: 100%; text-align: right;
+      padding-bottom: clamp(10px, 2.5vw, 25px); padding-right: clamp(20px, 8vw, 100px);
+      box-sizing: border-box; font-family: 'Forma', sans-serif;
+      font-size: clamp(12px, 1.8vw, 16px); color: white;
+      z-index: 10000; line-height: 1.4;
+      /* animation-delay: 1s; */ /* Ritardo maggiore per il footer */
     }
 
-    .circle-btn.active {
-      background-color: yellow;
-      border-color: yellow;
+    /* CSS per Demo 2 */
+    .full-width-demo-container {
+      width: 100%;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: black;
+      position: relative;
+      z-index: 50;
+      /* animation-delay: 0.6s; */
     }
 
-    .demo-container {
+    .full-width-demo-container h2 {
+      font-family: 'Forma', sans-serif;
+      font-size: clamp(20px, 3vw, 30px);
+      color: white;
+      text-align: center;
+      padding-top: clamp(25px, 4vh, 50px);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    #canvas-holder-2 {
+      width: 100%;
       display: flex;
-      flex-direction: row;
-      transform:translateX(-20vw);
-      align-items: flex-start;
       justify-content: center;
-      margin-top: 40px;
-      margin-bottom: 200px;
+      align-items: center;
+      position: relative;
+      z-index: 0;
+      overflow: hidden;
     }
 
-.buttons-container-vertical {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 20px;
-}
+    #canvas-holder-2::before,
+    #canvas-holder-2::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 80px;
+      z-index: 1;
+      pointer-events: none;
+    }
 
-.slider-container {
-    text-align: center;
-    color: white;
-    transform: rotate(-90deg) translateY(1px); /* Ruota lo slider di 90 gradi e lo sposta a destra */
-    margin-top: 80px;
-}
+    #canvas-holder-2::before {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 25%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%);
+    }
 
-.slider {
-    width: 150px;  /* Imposta una larghezza per lo slider verticale */
-    height: 15px;  /* Spessore della linea dello slider */
-    -webkit-appearance: none;
-    appearance: none;
-    background: white; /* Colore della linea */
-    border-radius: 7.5px; /* Arrotonda i bordi della linea */
-    outline: none;
-}
+    #canvas-holder-2::after {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 25%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%);
+    }
 
-.slider::-webkit-slider-thumb {
-    width: 40px; /* Dimensione della palla */
-    height: 40px;
-    border-radius: 50%; /* Rende la palla circolare */
-    background: white; /* Colore iniziale della palla */
-    cursor: pointer;
-    transition: background 0.3s;
-}
 
-.slider::-webkit-slider-thumb:hover {
-    background: yellow; /* Colore della palla quando selezionata */
-}
-
-.slider::-webkit-slider-runnable-track {
-    width: 15px; /* Spessore della traccia */
-    background: white; /* Colore della traccia */
-}
-
-.slider::-moz-range-thumb {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: white;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.slider::-moz-range-thumb:hover {
-    background: yellow;
-}
-
-.slider::-moz-range-track {
-    width: 15px;
-    background: white;
-}
-
-</style>
-
+    @media (min-width: 768px) {
+      .demo-container {
+        flex-direction: row; align-items: center; justify-content: flex-start;
+        width: auto; max-width: 900px; margin-top: 30px; margin-bottom: 50px;
+        margin-left: 5vw; margin-right: auto;
+      }
+      .buttons-container-vertical {
+        flex-direction: column; align-items: center; flex-wrap: nowrap;
+        margin-right: clamp(20px, 4vw, 50px); margin-bottom: 0; width: auto;
+      }
+      .buttons-container-vertical .shape-btn { margin: 10px 0; }
+      .slider-container {
+        transform: rotate(-90deg); margin-top: 70px; margin-bottom: 40px;
+        margin-left: 0; width: auto; flex-direction: column;
+      }
+      .slider { width: 150px; margin:0; }
+      #slider-value { transform: rotate(90deg); margin-top: 15px; margin-left: 0px; }
+      #canvas-holder { width: auto; max-width: 400px; margin-top: 0; }
+    }
   </style>
 </head>
-
 <body>
-  <div id="SDF">SDF</div>
-  <div id="testobox">
+  <div id="SDF" class="fade-in-from-top" style="animation-delay: 0s;">SDF</div>
+
+  <div id="testobox" class="fade-in-from-top" style="animation-delay: 0.2s;">
     Le Signed Distance Function (SDF) sono una rappresentazione matematica di superfici nello spazio tridimensionale, dove ogni punto dello spazio è associato alla distanza più breve dalla superficie. Se il punto si trova all'interno della superficie, la distanza è negativa, mentre se si trova all'esterno, la distanza è positiva. La funzione restituisce quindi il valore della distanza e, allo stesso tempo, indica da quale lato della superficie si trova il punto.
     <br><br>
     Gli SDF sono utilizzati in molti campi, tra cui la computer grafica, la modellazione 3D e la simulazione fisica, per rappresentare oggetti complessi in modo efficiente e per applicare tecniche come il ray tracing e il rendering volumetrico. Questo approccio offre anche vantaggi nelle operazioni booleane tra oggetti 3D, come unione, differenza e intersezione, grazie alla semplicità matematica delle funzioni di distanza.
   </div>
 
-<div class="demo-container">
-    <div class="buttons-container-vertical">
-        <div class="circle-btn active" onclick="changeDemo(1)" id="btn1"></div>
-        <div class="circle-btn" onclick="changeDemo(2)" id="btn2"></div>
-        <div class="circle-btn" onclick="changeDemo(3)" id="btn3"></div>
-        <!-- Slider moved here -->
-        <div class="slider-container">
-            <input type="range" id="pixel-slider" class="slider" min="16" max="30" value="20" step="1">
-            <span id="slider-value" style="color: black;"></span>
-        </div>
-    </div>
-    <div id="canvas-holder"></div>
-</div>
+  <div class="demo-container fade-in-from-top" style="animation-delay: 0.4s;">
+      <div class="buttons-container-vertical">
+          <div class="shape-btn circle-shape active" onclick="changeDemo(1)" id="btn1"></div>
+          <div class="shape-btn triangle-shape" onclick="changeDemo(2)" id="btn2"></div>
+          <div class="shape-btn square-shape" onclick="changeDemo(3)" id="btn3"></div>
+          <div class="slider-container">
+              <input type="range" id="pixel-slider" class="slider" min="10" max="40" value="20" step="1">
+              <span id="slider-value">20</span>
+          </div>
+      </div>
+      <div id="canvas-holder"></div>
+  </div>
+
+  <div class="additional-text-box fade-in-from-top" style="animation-delay: 0.6s;">
+    Le Signed Distance Function (SDF) sono una rappresentazione matematica di superfici nello spazio tridimensionale, dove ogni punto dello spazio è associato alla distanza più breve dalla superficie. Se il punto si trova all'interno della superficie, la distanza è negativa, mentre se si trova all'esterno, la distanza è positiva. La funzione restituisce quindi il valore della distanza e, allo stesso tempo, indica da quale lato della superficie si trova il punto.
+    <br><br>
+    Gli SDF sono utilizzati in molti campi, tra cui la computer grafica, la modellazione 3D e la simulazione fisica, per rappresentare oggetti complessi in modo efficiente e per applicare tecniche come il ray tracing e il rendering volumetrico. Questo approccio offre anche vantaggi nelle operazioni booleane tra oggetti 3D, come unione, differenza e intersezione, grazie alla semplicità matematica delle funzioni di distanza.
+  </div>
+
+  <div class="full-width-demo-container fade-in-from-top" style="animation-delay: 0.8s;">
+    <div id="canvas-holder-2"></div>
+  </div>
+
+  <div class="additional-text-box fade-in-from-top" style="animation-delay: 1s;">
+    Le Signed Distance Function (SDF) sono una rappresentazione matematica di superfici nello spazio tridimensionale, dove ogni punto dello spazio è associato alla distanza più breve dalla superficie. Se il punto si trova all'interno della superficie, la distanza è negativa, mentre se si trova all'esterno, la distanza è positiva. La funzione restituisce quindi il valore della distanza e, allo stesso tempo, indica da quale lato della superficie si trova il punto.
+    <br><br>
+    Gli SDF sono utilizzati in molti campi, tra cui la computer grafica, la modellazione 3D e la simulazione fisica, per rappresentare oggetti complessi in modo efficiente e per applicare tecniche come il ray tracing e il rendering volumetrico. Questo approccio offre anche vantaggi nelle operazioni booleane tra oggetti 3D, come unione, differenza e intersezione, grazie alla semplicità matematica delle funzioni di distanza.
+  </div>
+
+  <div id="footer" class="fade-in-from-top" style="animation-delay: 1.2s;">
+    Lorenzo Livorsi<br>
+    Samuele De March
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
+
   <script>
+    // Script per il primo demo (SDF forme base)
     let demo = 1;
-    let pixelSize = 16;  // Default pixel size
+    let pixelSize = 20;
 
-    function setup() {
-      const canvas = createCanvas(windowWidth / 2.8, windowWidth / 2.8);
-      canvas.parent('canvas-holder');
-      strokeWeight(7);
-      noLoop();
+    function getCanvasSize() {
+    const holder = document.getElementById('canvas-holder');
+    // Se holder non è ancora nel DOM o non ha larghezza, usa una stima basata su window.innerWidth
+    let holderClientWidth = holder ? holder.clientWidth : (window.innerWidth * 0.9);
 
-      // Update pixel size from the slider
-      const slider = document.getElementById('pixel-slider');
-      slider.addEventListener('input', function() {
-        pixelSize = parseInt(slider.value);
-        document.getElementById('slider-value').textContent = pixelSize;
-        redraw();
-      });
+    let availableWidth;
+    if (window.innerWidth < 768) { // Mobile
+        // Su mobile, cerchiamo di usare una buona porzione della larghezza della finestra
+        availableWidth = window.innerWidth * 0.85;
+    } else { // Desktop
+        // Su desktop, usiamo la larghezza disponibile nell'holder (che ha max-width CSS)
+        // o una frazione della larghezza della finestra, per lasciare spazio ai controlli a lato.
+        // Aumentiamo leggermente la frazione per permettere al canvas di crescere di più.
+        availableWidth = Math.min(holderClientWidth, window.innerWidth * 0.55);
     }
 
-    function windowResized() {
-      resizeCanvas(windowWidth / 2.8, windowWidth / 2.8);
+    // Nuovi limiti: minimo circa 200*1.8=360px, massimo circa 400*1.8=720px
+    let canvasDim = constrain(availableWidth, 360, 720); // constrain è una funzione p5 globale
+    return canvasDim;
+}
+
+    // All'interno del primo blocco <script> dove ci sono setup(), draw(), ecc.
+
+// ... (variabili demo, pixelSize, funzione getCanvasSize() rimangono invariate) ...
+
+function setup() {
+  const slider = document.getElementById('pixel-slider');
+  const sliderValueDisplay = document.getElementById('slider-value'); // Questo elemento è nascosto via CSS
+
+  // Ottieni i valori min e max direttamente dallo slider HTML
+  // Questo rende la logica di inversione robusta se cambi min/max nell'HTML
+  const minSliderVal = parseInt(slider.min);
+  const maxSliderVal = parseInt(slider.max);
+
+  // Funzione helper per calcolare il valore invertito
+  function getInvertedSliderValue() {
+    let currentValue = parseInt(slider.value); // Valore letto direttamente dallo slider (es. 10-40)
+    // Formula per invertire: min + max - valoreCorrente
+    return minSliderVal + maxSliderVal - currentValue;
+  }
+
+  // Usa il valore invertito per pixelSize all'avvio
+  pixelSize = getInvertedSliderValue();
+
+  // Anche se sliderValueDisplay è nascosto, aggiorniamo il suo testo
+  // nel caso tu decida di renderlo nuovamente visibile. Mostrerà il valore invertito.
+  if (sliderValueDisplay) sliderValueDisplay.textContent = pixelSize;
+
+  let currentCanvasSize = getCanvasSize();
+  const canvas = createCanvas(currentCanvasSize, currentCanvasSize);
+  if (document.getElementById('canvas-holder')) {
+    canvas.parent('canvas-holder');
+  }
+  stroke(200);
+  strokeWeight(1);
+  noLoop();
+
+  // Modifica l'event listener per usare il valore invertito
+  slider.addEventListener('input', function() {
+    pixelSize = getInvertedSliderValue(); // Usa il valore invertito
+    if (sliderValueDisplay) sliderValueDisplay.textContent = pixelSize; // Aggiorna il testo (anche se nascosto)
+    if (typeof redraw === 'function') redraw();
+  });
+
+  if (typeof redraw === 'function') redraw();
+}
+
+
+function draw() {
+  background(255); // Sfondo bianco del canvas
+
+  // Calcoliamo ancora numPixelsAcross per la soglia, per mantenere lo stesso spessore visivo del bordo SDF
+  let numPixelsForSDFThickness = Math.floor(width / pixelSize);
+  numPixelsForSDFThickness = Math.max(1, numPixelsForSDFThickness);
+  const soglia = (numPixelsForSDFThickness > 0) ? (0.53 * 2) / numPixelsForSDFThickness : 0.01;
+
+  // Chiama le funzioni demo passando solo la soglia
+  // pixelSize è una variabile globale accessibile dentro le demoN
+  // width e height sono le dimensioni globali del canvas p5
+  if (demo === 1) demo1(soglia);
+  else if (demo === 2) demo2(soglia);
+  else if (demo === 3) demo3(soglia);
+}
+
+// MODIFICATE LE FUNZIONI DEMO
+function demo1(soglia) { // 'dim' non è più un parametro
+  stroke(0);
+  strokeWeight(2);
+  for (let j_coord = 0; j_coord < height; j_coord += pixelSize) {
+    for (let i_coord = 0; i_coord < width; i_coord += pixelSize) {
+      // Calcola u,v per il centro di questo "pixel"
+      const u = map(i_coord + pixelSize / 2, 0, width, -1, 1);
+      const v = map(j_coord + pixelSize / 2, 0, height, -1, 1);
+
+      const c1 = cerchioSDF(u, v, 0.8);
+      const bordoc1 = Math.abs(c1) < soglia;
+
+      fill(bordoc1 ? 0 : 255);
+      rect(i_coord, j_coord, pixelSize, pixelSize);
     }
+  }
+  // Il codice per riempire lo spazio vuoto non è più necessario
+}
 
-    function draw() {
-      if (demo === 1) {
-        demo1();
-      } else if (demo === 2) {
-        demo2();
-      } else if (demo === 3) {
-        demo3();
-      }
+function demo2(soglia) { // 'dim' non è più un parametro
+  stroke(0);
+  strokeWeight(2);
+  for (let j_coord = 0; j_coord < height; j_coord += pixelSize) {
+    for (let i_coord = 0; i_coord < width; i_coord += pixelSize) {
+      const u = map(i_coord + pixelSize / 2, 0, width, -1, 1);
+      const v = map(j_coord + pixelSize / 2, 0, height, -1, 1);
+
+      const r1 = sdEquilateralTriangle({ x: u, y: -v + 0.25 }, 0.8);
+      const bordor1 = Math.abs(r1) < soglia;
+
+      fill(bordor1 ? 0 : 255);
+      rect(i_coord, j_coord, pixelSize, pixelSize);
     }
+  }
+}
 
-    function demo1() {
-      background(220);
-      const dim = width / pixelSize;
-      const soglia = pixelSize * 0.53 / width * 2;
+function demo3(soglia) { // 'dim' non è più un parametro
+  stroke(0);
+  strokeWeight(2);
+  for (let j_coord = 0; j_coord < height; j_coord += pixelSize) {
+    for (let i_coord = 0; i_coord < width; i_coord += pixelSize) {
+      const u = map(i_coord + pixelSize / 2, 0, width, -1, 1);
+      const v = map(j_coord + pixelSize / 2, 0, height, -1, 1);
 
-      for (let j = 0; j < dim; j++) {
-        for (let i = 0; i < dim; i++) {
-          const u = i / (dim - 1) * 2 - 1;
-          const v = j / (dim - 1) * 2 - 1;
+      const r1 = rettangoloSDF(u, v, 0.4, 0.7);
+      const bordor1 = Math.abs(r1) < soglia;
 
-          const c1 = cerchio(u, v, 0.8);
-          const bordoc1 = Math.abs(c1) < soglia;
-
-          fill(bordoc1 ? 0 : 255);
-          rect(pixelSize * i, pixelSize * j, pixelSize, pixelSize);
-        }
-      }
+      fill(bordor1 ? 0 : 255);
+      rect(i_coord, j_coord, pixelSize, pixelSize);
     }
+  }
+}
 
-    function demo2() {
-      background(220);
-      const dim = width / pixelSize;
-      const soglia = pixelSize * 0.53 / width * 2;
-
-      for (let j = 0; j < dim; j++) {
-        for (let i = 0; i < dim; i++) {
-          const u = i / (dim - 1) * 2 - 1;
-          const v = j / (dim - 1) * 2 - 1;
-
-          const r1 = sdEquilateralTriangle({ x: u, y: -v + 0.25 }, 0.8);
-          const bordor1 = Math.abs(r1) < soglia;
-
-          fill(bordor1 ? 0 : 255);
-          rect(pixelSize * i, pixelSize * j, pixelSize, pixelSize);
-        }
-      }
-    }
-
-    function demo3() {
-      background(220);
-      const dim = width / pixelSize;
-      const soglia = pixelSize * 0.53 / width * 2;
-
-      for (let j = 0; j < dim; j++) {
-        for (let i = 0; i < dim; i++) {
-          const u = i / (dim - 1) * 2 - 1;
-          const v = j / (dim - 1) * 2 - 1;
-
-          const r1 = rettangolo(u, v, 0.4, 0.7);
-          const bordor1 = Math.abs(r1) < soglia;
-
-          fill(bordor1 ? 0 : 255);
-          rect(pixelSize * i, pixelSize * j, pixelSize, pixelSize);
-        }
-      }
-    }
-
-    function cerchio(x, y, r) {
-      return Math.sqrt(x ** 2 + y ** 2) - r;
-    }
-
-    function rettangolo(px, py, halfWidth, halfHeight) {
-      const dx = Math.abs(px) - halfWidth;
-      const dy = Math.abs(py) - halfHeight;
-      if (dx <= 0 && dy <= 0) return Math.min(-dx, -dy);
-      const ox = Math.max(dx, 0);
-      const oy = Math.max(dy, 0);
-      return Math.sqrt(ox * ox + oy * oy);
-    }
-
-    function sdEquilateralTriangle(p, r) {
-      const k = Math.sqrt(3);
-      p.x = Math.abs(p.x) - r;
-      p.y = p.y + r / k;
-      if (p.x + k * p.y > 0) {
-        const x = (p.x - k * p.y) / 2;
-        const y = (-k * p.x - p.y) / 2;
-        p.x = x;
-        p.y = y;
-      }
-      p.x -= clamp(p.x, -2 * r, 0);
-      return -Math.hypot(p.x, p.y) * Math.sign(p.y);
-    }
-
-    function clamp(val, min, max) {
-      return Math.max(min, Math.min(max, val));
-    }
-
-    function changeDemo(num) {
-      demo = num;
-      redraw();
-
-      for (let i = 1; i <= 3; i++) {
-        document.getElementById('btn' + i).classList.remove('active');
-      }
-      document.getElementById('btn' + num).classList.add('active');
-    }
-
+// ... (funzioni cerchioSDF, rettangoloSDF, sdEquilateralTriangle, clamp, changeDemo rimangono invariate) ...
+    function cerchioSDF(x, y, r) { return Math.sqrt(x ** 2 + y ** 2) - r; }
+    function rettangoloSDF(px, py, halfWidth, halfHeight) { const dx = Math.abs(px) - halfWidth; const dy = Math.abs(py) - halfHeight; return Math.sqrt(Math.max(dx, 0)**2 + Math.max(dy, 0)**2) + Math.min(Math.max(dx, dy), 0); }
+    function sdEquilateralTriangle(p_obj, r) { const k = Math.sqrt(3); p_obj.x = Math.abs(p_obj.x) - r; p_obj.y = p_obj.y + r / k; if (p_obj.x + k * p_obj.y > 0) { const x_temp = (p_obj.x - k * p_obj.y) / 2; const y_temp = (-k * p_obj.x - p_obj.y) / 2; p_obj.x = x_temp; p_obj.y = y_temp; } p_obj.x -= clamp(p_obj.x, -2 * r, 0); return -Math.hypot(p_obj.x, p_obj.y) * Math.sign(p_obj.y); }
+    function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
+    function changeDemo(num) { demo = num; if (typeof redraw === 'function') redraw(); for (let i = 1; i <= 3; i++) { if(document.getElementById('btn' + i)) document.getElementById('btn' + i).classList.remove('active'); } if(document.getElementById('btn' + num)) document.getElementById('btn' + num).classList.add('active'); }
   </script>
 
+  <script>
+    // Script per il SECONDO demo (SDF Cerchi Interattivi)
+    const sketch2Code = function(p) {
+      const fiss = 0.4;
+      let pixelStep = 5;
+
+      function cerchioSDF_instance(x, y, r) {
+        return p.sqrt(x*x + y*y) - r;
+      }
+
+      function calculateCanvasDimensions() {
+        let canvasWidth = window.innerWidth;
+        let canvasHeight = window.innerHeight * 0.70;
+        canvasWidth = p.max(canvasWidth, 300);
+        canvasHeight = p.max(canvasHeight, 200);
+        return { width: canvasWidth, height: canvasHeight };
+      }
+
+      p.setup = function() {
+        let dims = calculateCanvasDimensions();
+        let canvas = p.createCanvas(dims.width, dims.height);
+        let holder = document.getElementById('canvas-holder-2');
+        if (holder) {
+            canvas.parent('canvas-holder-2');
+        } else {
+            console.error("#canvas-holder-2 not found for parenting canvas!");
+        }
+        pixelStep = p.max(2, p.floor(p.width / 150));
+      };
+
+      p.windowResized = function() {
+        let dims = calculateCanvasDimensions();
+        p.resizeCanvas(dims.width, dims.height);
+        pixelStep = p.max(2, p.floor(p.width / 150));
+      }
+
+      p.draw = function() {
+        p.background(0);
+        p.noStroke();
+
+        const mx_screen_norm = p.map(p.mouseX, 0, p.width, -1, 1, true);
+        const my_screen_norm = p.map(p.mouseY, 0, p.height, -1, 1, true);
+
+        let mouse_x_sdf, mouse_y_sdf;
+        mouse_x_sdf = mx_screen_norm * (p.width / p.height);
+        mouse_y_sdf = my_screen_norm;
+
+        let distanzaMouseCentroSDF = p.sqrt(mouse_x_sdf*mouse_x_sdf + mouse_y_sdf*mouse_y_sdf);
+        let r2_sdf = p.abs(distanzaMouseCentroSDF - fiss);
+
+        for(let j_px = 0; j_px < p.height; j_px += pixelStep){
+          for(let i_px = 0; i_px < p.width; i_px += pixelStep){
+            const Px = i_px + pixelStep / 2;
+            const Py = j_px + pixelStep / 2;
+            const u_norm_for_sdf = (2.0 * Px - p.width) / p.height;
+            const v_norm_for_sdf = (2.0 * Py - p.height) / p.height;
+
+            let r_col = 0, g_col = 0, b_col = 0;
+
+            const sdf_c1 = cerchioSDF_instance(u_norm_for_sdf, v_norm_for_sdf, fiss);
+            const sdf_c2 = cerchioSDF_instance(u_norm_for_sdf - mouse_x_sdf, v_norm_for_sdf - mouse_y_sdf, r2_sdf);
+            const sdf_mouse_marker = cerchioSDF_instance(u_norm_for_sdf - mouse_x_sdf, v_norm_for_sdf - mouse_y_sdf, 0.02);
+            const sdf_center_marker = cerchioSDF_instance(u_norm_for_sdf, v_norm_for_sdf, 0.02);
+
+            const sdf_soglia_bordi = 0.025;
+
+            if (p.abs(sdf_c1) < sdf_soglia_bordi || p.abs(sdf_center_marker) < 0.015) {
+              r_col = g_col = b_col = 255;
+            } else if (p.abs(sdf_c2) < sdf_soglia_bordi || p.abs(sdf_mouse_marker) < 0.015) {
+              r_col = 255; g_col = 255; b_col = 0;
+            }
+            p.fill(r_col, g_col, b_col);
+            p.rect(i_px, j_px, pixelStep, pixelStep);
+          }
+        }
+
+        p.strokeWeight(p.max(1, p.round(p.width / 350)));
+        const steps = 200;
+        for (let t = 0; t <= 1; t += 1 / steps) {
+          const x_lerp_sdf = p.lerp(mouse_x_sdf, 0, t);
+          const y_lerp_sdf = p.lerp(mouse_y_sdf, 0, t);
+          const d_sdf = cerchioSDF_instance(x_lerp_sdf, y_lerp_sdf, fiss);
+
+          const px_screen = p.map(x_lerp_sdf, -p.width/p.height, p.width/p.height, 0, p.width);
+          const py_screen = p.map(y_lerp_sdf, -1, 1, 0, p.height);
+
+          if (d_sdf < 0) { p.stroke(255, 0, 0); }
+          else { p.stroke(0, 255, 0); }
+          p.point(px_screen, py_screen);
+        }
+
+        const puntatoreDentroC1_sdf = cerchioSDF_instance(mouse_x_sdf, mouse_y_sdf, fiss) < 0;
+
+        const angolo_sdf = p.atan2(mouse_y_sdf, mouse_x_sdf);
+        const puntoBordoX_sdf = fiss * p.cos(angolo_sdf);
+        const puntoBordoY_sdf = fiss * p.sin(angolo_sdf);
+
+        const puntatoreX_screen = p.map(mouse_x_sdf, -p.width/p.height, p.width/p.height, 0, p.width);
+        const puntatoreY_screen = p.map(mouse_y_sdf, -1, 1, 0, p.height);
+        const bordoX_screen = p.map(puntoBordoX_sdf, -p.width/p.height, p.width/p.height, 0, p.width);
+        const bordoY_screen = p.map(puntoBordoY_sdf, -1, 1, 0, p.height);
+
+        if (puntatoreDentroC1_sdf) {
+          p.stroke(0, 255, 0);
+          p.line(puntatoreX_screen, puntatoreY_screen, bordoX_screen, bordoY_screen);
+        }
+
+        p.strokeWeight(0);
+        const barraPaddingLaterale = p.width * 0.15;
+        const barraLarghezzaMaxPx = p.width - 2 * barraPaddingLaterale;
+        const barraY_pos = p.height - p.max(30, p.height * 0.08);
+        const barraAltezzaPx = p.max(8, p.height * 0.015);
+        const scalaBarraPxPerUnitaNorm = (barraLarghezzaMaxPx > 0 && fiss > 0.0001) ? (barraLarghezzaMaxPx / 2) / fiss : 100;
+        let lunghezzaTotaleBarraPx;
+        if (puntatoreDentroC1_sdf) {
+            lunghezzaTotaleBarraPx = fiss * scalaBarraPxPerUnitaNorm * 2;
+        } else {
+            lunghezzaTotaleBarraPx = (fiss + p.abs(distanzaMouseCentroSDF - fiss)) * scalaBarraPxPerUnitaNorm * 2;
+        }
+        lunghezzaTotaleBarraPx = p.min(lunghezzaTotaleBarraPx, barraLarghezzaMaxPx);
+        let barraX_pos = p.width / 2 - lunghezzaTotaleBarraPx / 2;
+        let lunghezzaRossaPx, lunghezzaVerdePx;
+        if (puntatoreDentroC1_sdf) {
+          lunghezzaRossaPx = distanzaMouseCentroSDF * scalaBarraPxPerUnitaNorm;
+          lunghezzaVerdePx = (fiss - distanzaMouseCentroSDF) * scalaBarraPxPerUnitaNorm;
+        } else {
+          lunghezzaRossaPx = fiss * scalaBarraPxPerUnitaNorm;
+          lunghezzaVerdePx = p.abs(distanzaMouseCentroSDF - fiss) * scalaBarraPxPerUnitaNorm;
+        }
+        let sommaParti = lunghezzaRossaPx + lunghezzaVerdePx;
+        if (sommaParti > lunghezzaTotaleBarraPx && sommaParti > 0.0001) {
+            let fattoreRidimensionamento = lunghezzaTotaleBarraPx / sommaParti;
+            lunghezzaRossaPx *= fattoreRidimensionamento;
+            lunghezzaVerdePx *= fattoreRidimensionamento;
+        } else if (sommaParti <= 0.0001 && lunghezzaTotaleBarraPx > 0) {
+            lunghezzaRossaPx = 0;
+            lunghezzaVerdePx = 0;
+        }
+        lunghezzaRossaPx = p.max(0, lunghezzaRossaPx);
+        lunghezzaVerdePx = p.max(0, lunghezzaVerdePx);
+        barraX_pos = p.width / 2 - (lunghezzaRossaPx + lunghezzaVerdePx)/2;
+
+        p.fill(100);
+        p.rect(barraX_pos, barraY_pos, lunghezzaRossaPx + lunghezzaVerdePx, barraAltezzaPx);
+        p.fill(255, 0, 0);
+        p.rect(barraX_pos, barraY_pos, lunghezzaRossaPx, barraAltezzaPx);
+        p.fill(0, 255, 0);
+        p.rect(barraX_pos + lunghezzaRossaPx, barraY_pos, lunghezzaVerdePx, barraAltezzaPx);
+
+        let textSizeVal = p.max(10, p.width / 45);
+        p.textSize(textSizeVal);
+        p.textAlign(p.CENTER, p.BOTTOM);
+        const testoY_pos = barraY_pos - p.max(3, barraAltezzaPx * 0.3 + 2);
+        const valoreScalaDisplay = 250;
+        if (puntatoreDentroC1_sdf) {
+          p.fill(255, 0, 0);
+          if(lunghezzaRossaPx > textSizeVal*0.5) p.text(p.floor(distanzaMouseCentroSDF * valoreScalaDisplay), barraX_pos + lunghezzaRossaPx/2, testoY_pos);
+          p.fill(0, 255, 0);
+          if(lunghezzaVerdePx > textSizeVal*0.5) p.text(p.floor((fiss - distanzaMouseCentroSDF) * valoreScalaDisplay), barraX_pos + lunghezzaRossaPx + lunghezzaVerdePx/2, testoY_pos);
+        } else {
+          p.fill(255, 0, 0);
+          if(lunghezzaRossaPx > textSizeVal*0.5) p.text(p.floor(fiss * valoreScalaDisplay), barraX_pos + lunghezzaRossaPx/2, testoY_pos);
+          p.fill(0, 255, 0);
+          if(lunghezzaVerdePx > textSizeVal*0.5) p.text(p.floor(p.abs(distanzaMouseCentroSDF - fiss) * valoreScalaDisplay), barraX_pos + lunghezzaRossaPx + lunghezzaVerdePx/2, testoY_pos);
+        }
+        p.noStroke();
+        let centroX_screen = p.map(0, -p.width/p.height, p.width/p.height, 0, p.width);
+        let centroY_screen = p.map(0, -1, 1, 0, p.height);
+        let markerSize = p.max(4, p.width/120);
+        p.fill(255);
+        p.ellipse(centroX_screen, centroY_screen, markerSize, markerSize);
+        p.fill(255, 255, 0);
+        p.ellipse(puntatoreX_screen, puntatoreY_screen, markerSize, markerSize);
+      };
+    };
+
+    var myp5_sketch2;
+    window.addEventListener('DOMContentLoaded', (event) => {
+        window.windowResized = function() {
+            if (typeof getCanvasSize === 'function' && typeof resizeCanvas === 'function' && typeof redraw === 'function') {
+                let currentCanvasSize = getCanvasSize();
+                if (typeof resizeCanvas === 'function') resizeCanvas(currentCanvasSize, currentCanvasSize);
+                if (typeof redraw === 'function') redraw();
+            }
+            if (window.myp5_sketch2 && typeof window.myp5_sketch2.windowResized === 'function') {
+                window.myp5_sketch2.windowResized();
+            }
+        }
+        myp5_sketch2 = new p5(sketch2Code, 'canvas-holder-2');
+    });
+
+  </script>
 </body>
 </html>
